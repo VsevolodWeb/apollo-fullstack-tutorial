@@ -1,8 +1,13 @@
-const {DataSource} = require('apollo-datasource')
-const isEmail = require('isemail')
+import {DataSourceConfig} from 'apollo-datasource/src/index'
+
+import {DataSource} from 'apollo-datasource'
+import isEmail from 'isemail'
 
 class UserAPI extends DataSource {
-	constructor({store}) {
+	private store: any
+	private context: any
+
+	constructor(store: any) {
 		super()
 		this.store = store
 	}
@@ -13,7 +18,7 @@ class UserAPI extends DataSource {
 	 * like caches and context. We'll assign this.context to the request context
 	 * here, so we can know about the user making requests
 	 */
-	initialize(config) {
+	initialize(config: DataSourceConfig<any>) {
 		this.context = config.context
 	}
 
@@ -22,16 +27,16 @@ class UserAPI extends DataSource {
 	 * have to be. If the user is already on the context, it will use that user
 	 * instead
 	 */
-	async findOrCreateUser({email: emailArg} = {}) {
+	async findOrCreateUser({email: emailArg}: {email?: string} = {}) {
 		const email =
-			this.context && this.context.user ? this.context.user.email : emailArg
+			this.context?.user ? this.context.user.email : emailArg
 		if (!email || !isEmail.validate(email)) return null
 
 		const users = await this.store.users.findOrCreate({where: {email}})
 		return users && users[0] ? users[0] : null
 	}
 
-	async bookTrips({launchIds}) {
+	async bookTrips({launchIds}: {launchIds: number[]}) {
 		const userId = this.context.user.id
 		if (!userId) return
 
@@ -47,7 +52,7 @@ class UserAPI extends DataSource {
 		return results
 	}
 
-	async bookTrip({launchId}) {
+	async bookTrip({launchId}: {launchId: number}) {
 		const userId = this.context.user.id
 		const res = await this.store.trips.findOrCreate({
 			where: {userId, launchId},
@@ -55,7 +60,7 @@ class UserAPI extends DataSource {
 		return res && res.length ? res[0].get() : false
 	}
 
-	async cancelTrip({launchId}) {
+	async cancelTrip({launchId}: {launchId: number}) {
 		const userId = this.context.user.id
 		return !!this.store.trips.destroy({where: {userId, launchId}})
 	}
@@ -66,11 +71,11 @@ class UserAPI extends DataSource {
 			where: {userId},
 		})
 		return found && found.length
-			? found.map(l => l.dataValues.launchId).filter(l => !!l)
+			? found.map((l: any) => l.dataValues.launchId).filter((l: any) => !!l)
 			: []
 	}
 
-	async isBookedOnLaunch({launchId}) {
+	async isBookedOnLaunch({launchId}: {launchId: number}) {
 		if (!this.context || !this.context.user) return false
 		const userId = this.context.user.id
 		const found = await this.store.trips.findAll({
@@ -80,4 +85,4 @@ class UserAPI extends DataSource {
 	}
 }
 
-module.exports = UserAPI
+export default UserAPI

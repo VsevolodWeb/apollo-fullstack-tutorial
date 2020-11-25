@@ -42,7 +42,7 @@ class LaunchAPI extends RESTDataSource {
 
 	async getAllLaunches() {
 		const response = await this.get<LaunchType[]>('launches')
-		console.log(response)
+
 		return Array.isArray(response)
 			? response.map(launch => this.launchReducer(launch))
 			: []
@@ -60,4 +60,4 @@ class LaunchAPI extends RESTDataSource {
 	}
 }
 
-module.exports = LaunchAPI
+export default LaunchAPI
