@@ -2,12 +2,13 @@ import {DataSourceConfig} from 'apollo-datasource/src/index'
 
 import {DataSource} from 'apollo-datasource'
 import isEmail from 'isemail'
+import {StoreType} from '../utils'
 
 class UserAPI extends DataSource {
-	private store: any
 	private context: any
+	private store: StoreType
 
-	constructor(store: any) {
+	constructor(store: StoreType) {
 		super()
 		this.store = store
 	}
@@ -62,7 +63,7 @@ class UserAPI extends DataSource {
 
 	async cancelTrip({launchId}: {launchId: number}) {
 		const userId = this.context.user.id
-		return !!this.store.trips.destroy({where: {userId, launchId}})
+		return !!await this.store.trips.destroy({where: {userId, launchId}})
 	}
 
 	async getLaunchIdsByUser() {

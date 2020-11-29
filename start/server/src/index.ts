@@ -3,7 +3,7 @@ require('dotenv').config()
 import {ApolloServer} from 'apollo-server'
 import typeDefs from './schema'
 
-const {createStore} = require('./utils')
+import {createStore} from './utils'
 
 import LaunchAPI from './datasources/launch'
 import UserAPI from './datasources/user'
@@ -14,7 +14,7 @@ const server = new ApolloServer({
 	typeDefs,
 	dataSources: () => ({
 		launchAPI: new LaunchAPI(),
-		userAPI: new UserAPI({ store })
+		userAPI: new UserAPI(store)
 	})
 })
 

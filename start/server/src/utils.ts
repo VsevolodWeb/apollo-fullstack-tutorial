@@ -1,16 +1,19 @@
-import {Op} from 'sequelize'
 import {Sequelize} from 'sequelize-typescript'
+import User from './Models/User'
+import Trip from './models/Trip'
 
-module.exports.paginateResults = ({
-	                                  // @ts-ignore
-	                                  after: cursor,
-	                                  pageSize = 20,
-	                                  // @ts-ignore
-	                                  results,
-	                                  // can pass in a function to calculate an item's cursor
-                                      // @ts-ignore
-	                                  getCursor,
-                                  }) => {
+export type StoreType = { users: typeof User, trips: typeof Trip }
+
+export function paginateResults({
+	                                // @ts-ignore
+	                                after: cursor,
+	                                pageSize = 20,
+	                                // @ts-ignore
+	                                results,
+	                                // can pass in a function to calculate an item's cursor
+	                                // @ts-ignore
+	                                getCursor,
+                                }) {
 	if (pageSize < 1) return []
 
 	if (!cursor) return results.slice(0, pageSize)
@@ -32,47 +35,16 @@ module.exports.paginateResults = ({
 		: results.slice(0, pageSize)
 }
 
-module.exports.createStore = () => {
-	const db = new Sequelize({
+export function createStore(): StoreType {
+	new Sequelize({
 		database: 'database',
 		username: 'username',
 		password: 'password',
 		dialect: 'sqlite',
 		storage: './store.sqlite',
-		operatorsAliases: {
-			$in: Op.in
-		},
 		logging: false,
+		models: [__dirname + '/models']
 	})
 
-	db.addModels([])
-	const userAttributes: ModelAttributes<Model<UserAttributes, UserCreationAttributes>,
-		{id: unknown, createdAt: unknown, updatedAt: unknown, email: unknown, token: unknown}> = {
-		id: {
-			type: DataTypes.INTEGER,
-			primaryKey: true,
-			autoIncrement: true,
-		},
-		createdAt: DataTypes.DATE,
-		updatedAt: DataTypes.DATE,
-		email: DataTypes.STRING,
-		token: DataTypes.STRING,
-	}
-
-	const users = db.define<UserInstance>('user', userAttributes)
-
-	const trips = db.define('trip', {
-		id: {
-			type: DataTypes.INTEGER,
-			primaryKey: true,
-			autoIncrement: true,
-		},
-		createdAt: DataTypes.DATE,
-		updatedAt: DataTypes.DATE,
-		launchId: DataTypes.INTEGER,
-		email: DataTypes.STRING,
-		userId: DataTypes.INTEGER,
-	})
-
-	return {users, trips}
+	return {users: User, trips: Trip}
 }
