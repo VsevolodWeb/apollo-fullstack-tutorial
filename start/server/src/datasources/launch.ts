@@ -1,14 +1,16 @@
 import {RESTDataSource} from 'apollo-datasource-rest'
 
+export type LinksType = {
+	mission_patch_small: string
+	mission_patch_large: string
+}
+
 type LaunchType = {
 	flight_number: number
 	launch_date_unix: string
 	launch_site: string & { site_name: string }
 	mission_name: string
-	links: {
-		mission_patch_small: string
-		mission_patch: string
-	}
+	links: LinksType
 	rocket: {
 		rocket_id: number
 		rocket_name: string
@@ -30,7 +32,7 @@ class LaunchAPI extends RESTDataSource {
 			mission: {
 				name: launch.mission_name,
 				missionPatchSmall: launch.links.mission_patch_small,
-				missionPatchLarge: launch.links.mission_patch,
+				missionPatchLarge: launch.links.mission_patch_large,
 			},
 			rocket: {
 				id: launch.rocket.rocket_id,
