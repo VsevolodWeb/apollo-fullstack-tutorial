@@ -10,11 +10,11 @@ class User extends Model<User> {
 
 	@Column
 	@CreatedAt
-	creationDate!: Date;
+	createdAt!: Date;
 
 	@Column
 	@UpdatedAt
-	updatedOn!: Date;
+	updatedAt!: Date;
 
 	@Column
 	email!: string

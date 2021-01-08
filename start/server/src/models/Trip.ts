@@ -10,14 +10,11 @@ class Trip extends Model<Trip> {
 
 	@Column
 	@CreatedAt
-	creationDate!: Date
+	createdAt!: Date
 
 	@Column
 	@UpdatedAt
-	updatedOn!: Date
-
-	@Column
-	email!: string
+	updatedAt!: Date
 
 	@Column
 	launchId!: string

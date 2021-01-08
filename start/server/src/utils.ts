@@ -34,7 +34,7 @@ export const paginateResults: (options: {after: number, pageSize: number, result
 }
 
 export function createStore(): StoreType {
-	new Sequelize({
+	const sequelize = new Sequelize({
 		database: 'database',
 		username: 'username',
 		password: 'password',
@@ -43,6 +43,8 @@ export function createStore(): StoreType {
 		logging: false,
 		models: [__dirname + '/models']
 	})
+
+	sequelize.addModels([User, Trip])
 
 	return {users: User, trips: Trip}
 }
