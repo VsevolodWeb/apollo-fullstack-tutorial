@@ -5,7 +5,7 @@ import {LaunchType} from './datasources/launch'
 
 export type StoreType = { users: typeof User, trips: typeof Trip }
 
-export const paginateResults: (options: {after: number, pageSize: number, results: LaunchType[], getCursor?: (item: LaunchType) => number}) => LaunchType[] = ({
+export const paginateResults: (options: {after: string, pageSize: number, results: LaunchType[], getCursor?: (item: LaunchType) => number}) => LaunchType[] = ({
 	                                after: cursor,
 	                                pageSize = 20,
 	                                results,

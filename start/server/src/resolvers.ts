@@ -10,13 +10,16 @@ const resolvers: { [key: string]: QueryType } = {
 	Query: {
 		launches: async (_, {pageSize = 20, after}, {dataSources}) => {
 			const allLaunches = await dataSources.launchAPI.getAllLaunches()
+
 			// we want these in reverse chronological order
 			allLaunches.reverse()
+
 			const launches = paginateResults({
-				after: Number(after),
+				after,
 				pageSize,
 				results: allLaunches,
 			})
+
 			return {
 				launches,
 				cursor: launches.length ? launches[launches.length - 1].cursor : null,

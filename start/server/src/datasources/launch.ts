@@ -21,7 +21,7 @@ export type LaunchAPIType = {
 
 export type LaunchType = {
 	id: number
-	cursor: number
+	cursor: string
 	site: string
 	mission: {
 		name: string
@@ -44,7 +44,7 @@ class LaunchAPI extends RESTDataSource {
 	launchReducer(launch: LaunchAPIType): LaunchType {
 		return {
 			id: launch.flight_number || 0,
-			cursor: launch.launch_date_unix,
+			cursor: String(launch.launch_date_unix),
 			site: launch.launch_site && launch.launch_site.site_name,
 			mission: {
 				name: launch.mission_name,

@@ -33,8 +33,6 @@ class UserAPI extends DataSource {
 			this.context?.user ? this.context.user.email : emailArg
 		if (!email || !isEmail.validate(email)) return null
 
-		console.log(this.store.users.findOrCreate)
-
 		const users = await this.store.users.findOrCreate({where: {email}})
 		return users && users[0] ? users[0] : null
 	}
